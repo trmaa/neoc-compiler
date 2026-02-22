@@ -1,3 +1,9 @@
+/*
+ * TODO: documentation
+ * 
+ * License: GPL
+ * Author: trmaa <trmaayt@gmail.com> 21-2-2026 (Pablo Trik Marín)
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
