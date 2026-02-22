@@ -1,9 +1,16 @@
 # NEOC
 
-Is a language which compiles straight to C. It just has a preatier syntax for
-those new gen alpha programmers which can't stand `type name = value;`...
+Is a language which compiles straight to C.
+
+It just has a preatier syntax for those new gen alpha programmers which can't stand `type name = value;`...
 
 Just a fun project for me, i dont intent to make it usefull or nothing.
+
+The program just takes some .nc files and turns them into a binary by creating
+some equivalent .c files and compiling them. This means there are no header
+files...
+
+Any C code is a NC valid code too btw, NC is just an extra layer of syntax.
 
 ## How to
 
@@ -65,3 +72,8 @@ int main()
     printf("%s\n", msg3);
 }
 ```
+
+## TODO
+
+1. Add flags and opts to pause at different stages of compilation.
+2. Give more type infering support.
