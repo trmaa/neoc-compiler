@@ -76,3 +76,4 @@ int main()
 
 1. Add flags and opts to pause at different stages of compilation.
 2. Give more type infering support.
+3. in-range for loops.
