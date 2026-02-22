@@ -5,8 +5,14 @@ those new gen alpha programmers which can't stand `type name = value;`...
 
 Just a fun project for me, i dont intent to make it usefull or nothing.
 
-The program reads from stdin, and prints to stdout, so to compile a file just:
-`ncc <in.nc >out.c`.
+## How to
+
+```console
+$ ncc src0.nc src1.nc ... -o out
+```
+
+You can only use functions which are declared in each file: There are no hedader
+files, so just put things in order. You are the compiler now...
 
 ## Example
 

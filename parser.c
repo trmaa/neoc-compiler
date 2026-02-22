@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include "buff.h"
 
-void parse_let()
+void parse_let(FILE *in, FILE *out)
 {
 	char type[BUFF_LEN] = ""; // avoid overlaping trash
 	char name[BUFF_LEN] = "";
@@ -14,7 +14,7 @@ void parse_let()
 	char c;
 	char i = 0;
 
-	while ((c = getchar()) != EOF) {
+	while ((c = getc(in)) != EOF) {
 		if (c == ' ') {
 			goto inferr;
 			break;
@@ -34,7 +34,7 @@ void parse_let()
 	// name was set
 
 inferr:
-	scanf("= %[^;];\n", val);
+	fscanf(in, "= %[^;];\n", val);
 
 	if (val[0] == '\"') {
 		if (arr)
@@ -55,18 +55,18 @@ inferr:
 
 	goto end;
 typed:
-	scanf(" %s = %[^;];\n", type, val);
+	fscanf(in, " %s = %[^;];\n", type, val);
 	goto end;
 end:
 	if (val[0]) { // got a value
-		printf("%s %s = %s;\n", type, name, val);
+		fprintf(out, "%s %s = %s;\n", type, name, val);
 	} else {
 		type[strlen(type)-1] = 0; // eliminating ; bug from inferr
-		printf("%s %s;\n", type, name);
+		fprintf(out, "%s %s;\n", type, name);
 	}
 }
 
-void parse_fn()
+void parse_fn(FILE *in, FILE *out)
 {
 	char type[BUFF_LEN] = "";
 	char whole_func[BUFF_LEN * 4] = "";
@@ -74,7 +74,7 @@ void parse_fn()
 	char c;
 	int i = 0;
 
-	while ((c = getchar()) != EOF && c != '{') // printf doesn't seem to work in this case...
+	while ((c = getc(in)) != EOF && c != '{') // printf doesn't seem to work in this case...
 		whole_func[i++] = c;
 
 	int len = i;
@@ -93,7 +93,7 @@ void parse_fn()
 	if (!is_defined)
 		type[strlen(type)-1] = 0;
 
-	printf("%s ", type);
+	fprintf(out, "%s ", type);
 
 	char name[BUFF_LEN] = "";
 
@@ -102,7 +102,7 @@ void parse_fn()
 
 	i++; // now the i is the index of (
 
-	printf("%s(", name);
+	fprintf(out, "%s(", name);
 
 	char var_name[BUFF_LEN] = "";
 	char var_type[BUFF_LEN] = "";
@@ -111,7 +111,7 @@ void parse_fn()
 
 	char read = 0;
 
-	for (;i < len && whole_func[i] != ')'; i++) {
+	for (; i < len && whole_func[i] != ')'; i++) {
 		c = whole_func[i];
 
 		if (c == ' ')
@@ -127,26 +127,41 @@ void parse_fn()
 			fase = 0;
 			read = 0;
 
-			printf("%s %s, ", var_type, var_name);
+			fprintf(out, "%s %s, ", var_type, var_name);
 			continue;
 		}
 
 		switch (fase) {
 		case 0:
 			var_name[read++] = c;
+			break;
 		case 1:
 			var_type[read++] = c;
-		}	
+			break;
+		}
 	}
 
 	if (is_defined)
-		printf("%s %s)\n{", var_type, var_name);
+		fprintf(out, "%s %s)\n{", var_type, var_name);
 	else
-		printf("%s %s);\n", var_type, var_name);
+		fprintf(out, "%s %s);\n", var_type, var_name);
 }
 
-void parse()
+void parse(char *name)
 {
+	FILE *in, *out;
+
+	{
+		char inpath[BUFF_LEN] = "";
+		char outpath[BUFF_LEN] = "";
+
+		sprintf(inpath, "%s.nc", name);
+		sprintf(outpath, "obj/%s.c", name);
+
+		in = fopen(inpath, "r");
+		out = fopen(outpath, "w");
+	}
+
 	char c;
 
 	char buff[BUFF_LEN] = ""; // avoid trash
@@ -154,38 +169,38 @@ void parse()
 
 	bool end_of_keyword = false;
 
-	while ((c = getchar()) != EOF) {
+	while ((c = getc(in)) != EOF) {
 		end_of_keyword = c == ' ' || c == '\n' || c == '\t';
 
 		// parsing
 		if (!strcmp(buff, "//")) {
-			while ((c = getchar()) != EOF && c != '\n'); // ignoring
+			while ((c = getc(in)) != EOF && c != '\n'); // ignoring
 		}
 
 		else if (!strcmp(buff, "let")) {
-			parse_let();
+			parse_let(in, out);
 		}
 
 		else if (!strcmp(buff, "const")) {
-			printf("const ");
-			parse_let();
+			fprintf(out, "const ");
+			parse_let(in, out);
 		}
 
 		else if (!strcmp(buff, "fn")) {
-			parse_fn();
+			parse_fn(in, out);
 		}
 
 		else if (!strcmp(buff, "main")) {
-			printf("int main(int argc, char *argv[])\n");
+			fprintf(out, "int main(int argc, char *argv[])\n");
 		}
 
 		else if (!strcmp(buff, "use")) {
-			printf("#include ");
+			fprintf(out, "#include ");
 		}
 
 		else {
 			if (end_of_keyword)
-				printf("%s%c", buff, c);
+				fprintf(out, "%s%c", buff, c);
 		}
 
 		// reading
@@ -197,4 +212,7 @@ void parse()
 			buff_index = 0;
 		}
 	}
+
+	fclose(in);
+	fclose(out);
 }

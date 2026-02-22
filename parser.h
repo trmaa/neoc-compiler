@@ -1,5 +1,7 @@
 #pragma once
 
-void parse_let();
-void parse_fn();
-void parse();
+#include <stdio.h>
+
+void parse_let(FILE *in, FILE *out);
+void parse_fn(FILE *in, FILE *out);
+void parse(char *name);
