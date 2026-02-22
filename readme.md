@@ -32,8 +32,7 @@ fn sum_inf(a: int, b: int) {
     return a + b;
 }
 
-main()
-{
+main {
     const msg0: char* = "0";
     let msg1: char* = "1";
     const msg2 = "2";
