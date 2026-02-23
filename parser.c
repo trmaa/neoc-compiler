@@ -181,6 +181,8 @@ void parse_fn(FILE *in, FILE *out)
 	if (!is_defined)
 		type[strlen(type)-1] = 0;
 
+	parse_type(type);
+
 	fprintf(out, "%s ", type);
 
 	char name[BUFF_LEN] = "";
