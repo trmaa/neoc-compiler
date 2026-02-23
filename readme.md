@@ -1,5 +1,7 @@
 # NEOC
 
+NOTE: This compiler compiles 10 times faster than g++, no kidding...
+
 Is a language which compiles straight to C.
 
 It just has a preatier syntax for those new gen alpha programmers which can't stand `type name = value;`...
