@@ -1,4 +1,4 @@
-*.nc linguist-language=neoc
-*.nh linguist-language=neoc
+*.nc linguist-language=c
+*.nh linguist-language=c
 
 syntax/**** linguist-vendored
