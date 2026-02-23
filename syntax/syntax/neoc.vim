@@ -1,9 +1,3 @@
-" Vim syntax file
-" Language:     Your Language Name
-" Maintainer:   Your Name
-" Last Change:  2024
-
-" quit if syntax is already loaded
 if exists("b:current_syntax")
 	finish
 endif
