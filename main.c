@@ -1,5 +1,16 @@
 /*
- * TODO: documentation
+ * NEOC Compiler (aka: NCC)
+ *
+ * USE: ncc [-c don't clean] files.nc [-o out path]
+ *
+ * It inputs from FILE *in (.nc file), to the parser, and this outputs to 
+ * FILE *out (obj/.c file), for each file.
+ *
+ * Then it compiles with gcc all the generated C files into "out".
+ *
+ * If there is not -c flag, it removes the obj/ dir.
+ *
+ * Quite cool, huh??
  * 
  * License: GPL
  * Author: trmaa <trmaayt@gmail.com> 21-2-2026 (Pablo Trik Marín)
@@ -7,6 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "buff.h"
 #include "parser.h"
 
@@ -17,16 +29,23 @@ void help()
 
 int main(int argc, char *argv[])
 {
+	bool clean = true;
+
 	help();
 
 	system("mkdir -p obj");
 
-	char out[BUFF_LEN] = "";
+	char out[BUFF_LEN] = "a.out";
 
 	for (int i = 1; i < argc; i++) {
 		if (!strcmp(argv[i], "-o")) {
 			strcpy(out, argv[++i]);	
 			break;
+		}
+
+		if (!strcmp(argv[i], "-c")) {
+			clean = false;
+			continue;
 		}
 
 		int end = strlen(argv[i]);
@@ -40,7 +59,8 @@ int main(int argc, char *argv[])
 	sprintf(cmd, "gcc obj/*.c -o %s", out);
 	system(cmd);
 
-	system("rm -r obj");
+	if (clean)
+		system("rm -r obj");
 
 	fprintf(stderr, "Done!!! :)\n");
 }

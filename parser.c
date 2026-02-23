@@ -1,7 +1,68 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 #include "buff.h"
+
+void parse_type(char type[BUFF_LEN])
+{
+	char bits = atoi(&type[1]);	
+
+	bool pointer = false;
+
+	if (type[strlen(type)-1] == '*') {
+		pointer = true;
+		type[strlen(type)-1] = 0;
+	}
+
+	switch (type[0]) {
+	case 'z':
+		switch (bits) {
+		case 8:
+			strcpy(type, "char");
+			break;
+		case 16:
+			strcpy(type, "short");
+			break;
+		case 32:
+			strcpy(type, "int");
+			break;
+		case 64:
+			strcpy(type, "long");
+			break;
+		}
+		break;
+	case 'n':
+		switch (bits) {
+		case 8:
+			strcpy(type, "unsigned char");
+			break;
+		case 16:
+			strcpy(type, "unsigned short");
+			break;
+		case 32:
+			strcpy(type, "unsigned int");
+			break;
+		case 64:
+			strcpy(type, "unsigned long");
+			break;
+		}
+		break;
+	case 'f':
+		switch (bits) {
+		case 32:
+			strcpy(type, "float");
+			break;
+		case 64:
+			strcpy(type, "double");
+			break;
+		}
+		break;
+	}
+
+	if (pointer)
+		type[strlen(type)] = '*';
+}
 
 void parse_let(FILE *in, FILE *out)
 {
@@ -58,12 +119,15 @@ typed:
 	fscanf(in, " %s = %[^;];\n", type, val);
 	goto end;
 end:
-	if (val[0]) { // got a value
+	if (type[strlen(type)-1] == ';') // it happens when let a: int;
+		type[strlen(type)-1] = 0;
+
+	parse_type(type);
+
+	if (val[0]) // got a value
 		fprintf(out, "%s %s = %s;\n", type, name, val);
-	} else {
-		type[strlen(type)-1] = 0; // eliminating ; bug from inferr
+	else
 		fprintf(out, "%s %s;\n", type, name);
-	}
 }
 
 void parse_fn(FILE *in, FILE *out)
@@ -127,6 +191,8 @@ void parse_fn(FILE *in, FILE *out)
 			fase = 0;
 			read = 0;
 
+			parse_type(var_type);
+
 			fprintf(out, "%s %s, ", var_type, var_name);
 			continue;
 		}
@@ -140,6 +206,8 @@ void parse_fn(FILE *in, FILE *out)
 			break;
 		}
 	}
+
+	parse_type(var_type);
 
 	if (is_defined)
 		fprintf(out, "%s %s)\n{", var_type, var_name);

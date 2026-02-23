@@ -74,8 +74,6 @@ int main()
 
 ## TODO
 
-1. Give support to unsigned types.
-2. Document the code.
-3. Add flags and opts to pause at different stages of compilation.
-4. Give more type infering support.
-5. in-range for loops.
+1. Give more type infering support.
+2. in-range for loops.
+3. Sytax highlighting for vim.

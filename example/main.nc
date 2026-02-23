@@ -6,7 +6,7 @@ fn hello(name: char*) ~void {
 }
 
 main {
-	let name[256]: char;
+	let name[256]: n8;
 	strcpy(name, argv[1]);
 
 	let iters = 10;
