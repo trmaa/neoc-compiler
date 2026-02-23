@@ -1,15 +1,20 @@
+"
+" THIS CODE IS AI SLOP, I'M NOT RESPONSIBLE FOR WHAT HAPPENS!!!!
+"
+
 if exists("b:current_syntax")
 	finish
 endif
 
 " keywords
-syntax keyword neoc_keyword if start else while for use return fn let const EXIT_FAILURE EXIT_SUCCESS
+syntax keyword neoc_keyword if start else while for use return fn EXIT_FAILURE EXIT_SUCCESS continue break foreach
+syntax keyword neoc_type let const in
 
 " syntax keyword neoc_funcs main printf fprintf sprintf getc getchar scanf sscanf fscanf strcpy strcmp
 syntax match neoc_functionCall "\k\+\s*\ze("
 syntax match neoc_functionName "\<fn\s\+\zs\k\+" contained
 
-syntax keyword neoc_type n8 z8 n16 z16 n32 z32 n64 z64 f32 f64 int float void char double long struct enum bool
+syntax keyword neoc_type i8 u8 i16 u16 i32 u32 i64 u64 f32 f64 int float void char double long struct enum bool
 
 " comments
 syntax region neoc_comment start=/\/\// end=/\n/

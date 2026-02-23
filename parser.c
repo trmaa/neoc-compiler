@@ -22,7 +22,7 @@ void parse_type(char type[BUFF_LEN])
 	}
 
 	switch (type[0]) {
-	case 'z':
+	case 'i':
 		switch (bits) {
 		case 8:
 			strcpy(type, "char");
@@ -38,7 +38,7 @@ void parse_type(char type[BUFF_LEN])
 			break;
 		}
 		break;
-	case 'n':
+	case 'u':
 		switch (bits) {
 		case 8:
 			strcpy(type, "unsigned char");
@@ -255,6 +255,66 @@ void parse_include(FILE *in, FILE *out)
 	fprintf(out, "%c%c\n", c, _);
 }
 
+void parse_if(FILE *in, FILE *out)
+{
+	// Types:
+	// if ()
+	// if ... {
+	// if ... \n
+	
+	char c;
+
+	while ((c = getc(in)) != EOF) {
+		if (c == '(')
+			goto type0;
+
+		if (c != ' ' && c != '(')
+			goto type1;
+	}
+
+type0:
+	putc(c, out);
+	while ((c = getc(in)) != EOF && c != '\n')
+		putc(c, out);
+	putc(c, out);
+	return;
+
+type1:
+	putc('(', out);
+	putc(c, out);
+	while ((c = getc(in)) != EOF && c != '\n' && c != '{')
+		putc(c, out);
+	putc(')', out);
+	putc(c, out);
+	return;
+}
+
+void parse_for(FILE *in, FILE *out)
+{
+	putc('(', out);
+
+	char c;
+	char buff[BUFF_LEN * 4] = "";
+	char name[BUFF_LEN] = "";
+	char min[BUFF_LEN] = "";
+	char max[BUFF_LEN] = "";
+	char i = 0;
+
+	while ((c = getc(in)) != EOF && c != '{' && c != '\n') {
+		if (c == '(' || c == ')')
+			continue;
+
+		buff[i++] = c;
+	}
+
+	sscanf(buff, "let %s in %[^.]..%s", name, min, max);
+
+	fprintf(out, "int %s = %s; %s < %s; %s++", name, min, name, max, name);
+
+	putc(')', out);
+	putc(c, out);
+}
+
 void parse(char *name)
 {
 	int end = strlen(name);
@@ -303,7 +363,7 @@ void parse(char *name)
 		}
 
 		else if (!strcmp(buff, "const")) {
-			fprintf(out, "const");
+			fprintf(out, "const ");
 			parse_let(in, out);
 		}
 
@@ -318,6 +378,16 @@ void parse(char *name)
 		else if (!strcmp(buff, "use")) {
 			fprintf(out, "#include ");
 			parse_include(in, out);
+		}
+
+		else if (!strcmp(buff, "if")) {
+			fprintf(out, "if ");
+			parse_if(in, out);
+		}
+
+		else if (!strcmp(buff, "for")) {
+			fprintf(out, "for ");
+			parse_for(in, out);
 		}
 
 		else {
