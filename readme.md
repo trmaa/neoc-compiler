@@ -13,6 +13,10 @@ some equivalent .c and .h files and compiling them.
 
 Any C code is a NC valid code too btw, NC is just an extra layer of syntax.
 
+## The syntax is suposed to look like this in vim:
+
+![syntax](syntax/picture.png)
+
 ## How to
 
 ```console

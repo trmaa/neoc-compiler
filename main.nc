@@ -38,7 +38,7 @@ start {
 
 	for let i in 1..argc {
 		if !strcmp(argv[i], "-o") {
-			strcpy(out, argv[++i]);	
+			strcpy(out, argv[++i]);
 			break;
 		}
 
