@@ -1,7 +1,7 @@
-use <stdio.h>
-use <stdlib.h>
-use <string.h>
-use "hello.h"
+use <stdio.nh>
+use <stdlib.nh>
+use <string.nh>
+use "hello.nh"
 
 start {
 	if (argc < 2) {
