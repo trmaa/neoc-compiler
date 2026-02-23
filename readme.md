@@ -45,12 +45,12 @@ start {
 
 ## TODO
 
+0. Documentation.
 1. Give more type infering support.
-2. Recompile NCC in NC...
-3. Error checking.
-4. Comments.
+2. Error checking.
+3. Comments.
 
 ## BUGS
 
-+ let arr[len * 4] = ""; inferrs to int not char
++ let arr[len * 4] = ""; inferrs to int because of the number, not char
 + if strlen(str) == n //... doesn't put the last )
