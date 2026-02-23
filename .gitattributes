@@ -1,2 +1,5 @@
 *.nc linguist-language=neoc
 *.nh linguist-language=neoc
+
+example/* linguist-vendored
+syntax/* linguist-vendored
