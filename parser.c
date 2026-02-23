@@ -123,23 +123,24 @@ inferr:
 	goto end;
 typed:
 	{
-		int state = 0; // warning: not comming back
+		int state = 0;
 		for (i = 0; (c = getc(in)) != EOF;) {
 			if (c == '=') {
 				state = 1;
 				i = 0;
+				continue;
 			}
 
 			if (c == ';')
 				break;
 
 			switch (state) {
-				case 0:
-					type[i++] = c;
-					break;
-				case 1:
-					val[i++] = c;
-					break;
+			case 0:
+				type[i++] = c;
+				break;
+			case 1:
+				val[i++] = c;
+				break;
 			}
 		}
 	}
@@ -289,7 +290,12 @@ void parse(char *name)
 
 		// parsing
 		if (!strcmp(buff, "//")) {
-			while ((c = getc(in)) != EOF && c != '\n'); // ignoring
+			clear_buff(buff);
+
+			fprintf(out, "//");
+			while ((c = getc(in)) != EOF && c != '\n') // ignoring
+				putc(c, out);
+			putc('\n', out);
 		}
 
 		else if (!strcmp(buff, "let")) {
@@ -297,7 +303,7 @@ void parse(char *name)
 		}
 
 		else if (!strcmp(buff, "const")) {
-			fprintf(out, "const ");
+			fprintf(out, "const");
 			parse_let(in, out);
 		}
 

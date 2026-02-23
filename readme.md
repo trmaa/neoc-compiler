@@ -40,3 +40,4 @@ start {
 1. Give more type infering support.
 2. in-range for loops.
 3. Error checking.
+4. Comments.

@@ -14,7 +14,6 @@ start {
 
 	let iters = 10;
 
-	for (int i = 0; i < iters; i++) {
+	for (int i = 0; i < iters; i++)
 		hello(name);
-	}
 }
