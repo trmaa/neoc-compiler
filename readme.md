@@ -19,19 +19,27 @@ $ ncc src0.nc src1.nc header0.nh ... -o out
 
 ## Example
 
-```rust
+```neoc
 use <stdio.nh>
 
-fn sum(a: int, b: int) ~int {
-    return a + b;
+fn sum(a: i32, b: i32) ~i32 {
+        let sum = 0;
+
+        for let i in a..b
+                sum += i; 
+
+        if sum == 0
+                printf("WOW!\n");
+
+        return sum;
 }
 
 start {
-    let a = 10;
-    let b: z32 = 20;
-    let res: int = sum(a, b);
+        let a = 10;
+        let b = 20;
+        let res: i32 = sum(a, b);
 
-    printf("%d\n", res);
+        printf("sum(a, b) = %d\n", res);
 }
 ```
 
