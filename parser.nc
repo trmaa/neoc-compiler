@@ -1,23 +1,22 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include "buff.h"
+use <stdio.nh>
+use <stdlib.nh>
+use <string.nh>
+use <stdbool.nh>
+use "buff.nh"
 
-static void
-parse_type(char type[BUFF_LEN])
-{
-	if (type[strlen(type)-1] == ';') // it happens when let a: int;
+fn parse_type(type[BUFF_LEN]: char) ~static void {
+	// it happens when let a: int;
+	if type[strlen(type)-1] == ';'
 		type[strlen(type)-1] = 0;
 	
-	if (type[0] == ' ')
+	if type[0] == ' '
 		type++;
 
-	char bits = atoi(&type[1]);
+	let bits: char = atoi(&type[1]);
 
-	bool pointer = false;
+	let pointer = false;
 
-	if (type[strlen(type)-1] == '*') {
+	if type[strlen(type)-1] == '*' {
 		pointer = true;
 		type[strlen(type)-1] = 0;
 	}
@@ -67,34 +66,32 @@ parse_type(char type[BUFF_LEN])
 		break;
 	}
 
-	if (pointer)
+	if pointer
 		type[strlen(type)] = '*';
 }
 
-static void
-parse_let(FILE *in, FILE *out)
-{
-	char type[BUFF_LEN] = ""; // avoid trash
-	char name[BUFF_LEN] = "";
-	char val[BUFF_LEN] = "";
+fn parse_let(in: FILE*, out: FILE*) ~static void {
+	let type[BUFF_LEN] = ""; // avoid trash
+	let name[BUFF_LEN] = "";
+	let val[BUFF_LEN] = "";
 
-	bool arr = false;
+	let arr = false;
 
-	char c;
-	char i = 0;
+	let c: char;
+	let i = 0;
 
 	while ((c = getc(in)) != EOF) {
-		if (c == ' ') {
+		if c == ' ' {
 			goto inferr;
 			break;
 		}
 
-		else if (c == ':') {
+		else if c == ':' {
 			goto typed;
 			break;
 		}
 
-		if (c == '[')
+		if c == '['
 			arr = true;
 
 		name[i++] = c;
@@ -103,21 +100,26 @@ parse_let(FILE *in, FILE *out)
 	// name was set
 
 inferr:
-	fscanf(in, "= %[^;];\n", val);
+	fscanf(in, "= %[^\n]\n", val);
 
-	if (val[0] == '\"') {
-		if (arr)
+	if val[strlen(val)-1] == ';'
+		val[strlen(val)-1] = 0;
+
+	if val[0] == '\"' {
+		if arr
 			strcpy(type, "char"); 
 		else
 			strcpy(type, "char*"); 
 	}
 
-	else if (val[0] == '\'')
+	else if val[0] == '\''
 		strcpy(type, "char");
 		// TODO support array -> let arr = { ... }.
 		// TODO support references -> let b = &a.
+	else if val[0] == 't' || val[0] == 'f'
+		strcpy(type, "bool");
 	else
-		if (val[strlen(val)-1] == 'f')
+		if val[strlen(val)-1] == 'f'
 			strcpy(type, "float");
 		else	
 			strcpy(type, "int");
@@ -125,15 +127,15 @@ inferr:
 	goto end;
 typed:
 	{
-		int state = 0;
-		for (i = 0; (c = getc(in)) != EOF;) {
-			if (c == '=') {
+		let state = 0;
+		cfor (i = 0; (c = getc(in)) != EOF;) {
+			if c == '=' && state == 0 {
 				state = 1;
 				i = 0;
 				continue;
 			}
 
-			if (c == ';')
+			if c == '\n'
 				break;
 
 			switch (state) {
@@ -145,33 +147,42 @@ typed:
 				break;
 			}
 		}
+
+		switch (state) {
+		case 0:
+			if type[i-1] == ';'
+				type[i-1] = 0;
+			break;
+		case 1:
+			if val[i-1] == ';'
+				val[i-1] = 0;
+			break;
+		}
 	}
 	goto end;
 end:
 	parse_type(type);
 
-	if (val[0]) // got a value
+	if val[0]
 		fprintf(out, "%s %s = %s;\n", type, name, val);
 	else
 		fprintf(out, "%s %s;\n", type, name);
 }
 
-static void
-parse_fn(FILE *in, FILE *out)
-{
-	char type[BUFF_LEN] = "";
-	char whole_func[BUFF_LEN * 4] = "";
+fn parse_fn(in: FILE*, out: FILE*) ~static void {
+	let type[BUFF_LEN] = "";
+	let whole_func[BUFF_LEN*4] = "";
 
-	char c;
-	int i = 0;
+	let c: char;
+	let i = 0;
 
 	while ((c = getc(in)) != EOF && c != '{') // printf doesn't seem to work in this case...
 		whole_func[i++] = c;
 
-	int len = i;
+	let len: int = i;
 
-	for (i = 0; i < len; i++)
-		if (whole_func[i] == '~')
+	for let i in 0..len
+		if whole_func[i] == '~'
 			sprintf(type, "%s", &whole_func[i+1]);
 			//sscanf(&whole_func[i], "~%s", type);
 	
@@ -179,44 +190,44 @@ parse_fn(FILE *in, FILE *out)
 	
 	type[strlen(type)-1] = 0; // eliminate a space in the end
 	
-	bool is_defined = type[strlen(type)-1] != ';';
+	let is_defined: bool = type[strlen(type)-1] != ';';
 
-	if (!is_defined)
+	if !is_defined
 		type[strlen(type)-1] = 0;
 
 	parse_type(type);
 
 	fprintf(out, "%s ", type);
 
-	char name[BUFF_LEN] = "";
+	let name[BUFF_LEN] = "";
 
-	for (i = 0; i < len && whole_func[i] != '('; i++)
+	cfor (i = 0; i < len && whole_func[i] != '('; i++)
 		name[i] = whole_func[i];
 
 	i++; // now the i is the index of (
 
 	fprintf(out, "%s(", name);
 
-	char var_name[BUFF_LEN] = "";
-	char var_type[BUFF_LEN] = "";
+	let var_name[BUFF_LEN] = "";
+	let var_type[BUFF_LEN] = "";
 
-	char fase = 0;
+	let fase = 0;
 
-	char read = 0;
+	let read = 0;
 
-	for (; i < len && whole_func[i] != ')'; i++) {
+	cfor (; i < len && whole_func[i] != ')'; i++) {
 		c = whole_func[i];
 
-		if (c == ' ')
+		if c == ' '
 			continue;
 
-		if (c == ':') {
+		if c == ':' {
 			fase = 1;
 			read = 0;
 			continue;
 		} 
 		
-		if (c == ',') {
+		if c == ',' {
 			fase = 0;
 			read = 0;
 
@@ -238,38 +249,34 @@ parse_fn(FILE *in, FILE *out)
 
 	parse_type(var_type);
 
-	if (is_defined)
+	if is_defined
 		fprintf(out, "%s %s)\n{", var_type, var_name);
 	else
 		fprintf(out, "%s %s);\n", var_type, var_name);
 }
 
-static void
-parse_include(FILE *in, FILE *out)
-{
-	char c;
+fn parse_include(in: FILE*, out: FILE*) ~static void {
+	let c: char;
 
 	while ((c = getc(in)) != EOF) {
 		putc(c, out);
-		if (c == '.')
+		if c == '.'
 			break;
 	}
 
-	char _;
+	let _: char;
 	fscanf(in, "n%c%c\n", &c, &_);
 
 	fprintf(out, "%c%c\n", c, _);
 }
 
-static void
-parse_if(FILE *in, FILE *out)
-{
+fn parse_if(in: FILE*, out: FILE*) ~static void {
 	// Types:
 	// if ()
 	// if ... {
 	// if ... \n
 	
-	char c;
+	let c: char;
 
 	while ((c = getc(in)) != EOF) {
 		if (c == '(')
@@ -296,17 +303,15 @@ type1:
 	return;
 }
 
-static void
-parse_for(FILE *in, FILE *out)
-{
+fn parse_for(in: FILE*, out: FILE*) ~static void {
 	putc('(', out);
 
-	char c;
-	char buff[BUFF_LEN * 4] = "";
-	char name[BUFF_LEN] = "";
-	char min[BUFF_LEN] = "";
-	char max[BUFF_LEN] = "";
-	char i = 0;
+	let c: char;
+	let buff[BUFF_LEN*4] = "";
+	let name[BUFF_LEN] = "";
+	let min[BUFF_LEN] = "";
+	let max[BUFF_LEN] = "";
+	let i = 0;
 
 	while ((c = getc(in)) != EOF && c != '{' && c != '\n') {
 		if (c == '(' || c == ')')
@@ -323,18 +328,19 @@ parse_for(FILE *in, FILE *out)
 	putc(c, out);
 }
 
-void parse(char *name)
-{
-	int end = strlen(name);
-	char ext = name[end-1];
-	for (int j = end - 3; j < end; j++)
-		name[j] = 0;
+fn parse(name: char*) ~void {
+	let end: int = strlen(name);
+	let ext: char = name[end-1];
 
-	FILE *in, *out;
+	for let i in end-3..end
+		name[i] = 0;
+
+	let in: FILE*;
+	let out: FILE*;
 
 	{
-		char inpath[BUFF_LEN] = "";
-		char outpath[BUFF_LEN] = "";
+		let inpath[BUFF_LEN] = "";
+		let outpath[BUFF_LEN] = "";
 
 		sprintf(inpath, "%s.n%c", name, ext);
 		sprintf(outpath, "obj/%s.%c", name, ext);
@@ -343,21 +349,21 @@ void parse(char *name)
 		out = fopen(outpath, "w");
 	}
 
-	if (ext == 'h')
+	if ext == 'h'
 		fprintf(out, "#pragma once\n");
 
-	char c;
+	let c: char;
 
-	char buff[BUFF_LEN] = ""; // avoid trash
-	char buff_index = 0;
+	let buff[BUFF_LEN] = ""; // avoid trash
+	let buff_index = 0;
 
-	bool end_of_keyword = false;
+	let end_of_keyword = false;
 
 	while ((c = getc(in)) != EOF) {
 		end_of_keyword = c == ' ' || c == '\n' || c == '\t';
 
 		// parsing
-		if (!strcmp(buff, "//")) {
+		if !strcmp(buff, "//") {
 			clear_buff(buff);
 
 			fprintf(out, "//");
@@ -366,44 +372,48 @@ void parse(char *name)
 			putc('\n', out);
 		}
 
-		else if (!strcmp(buff, "let")) {
+		else if !strcmp(buff, "let") {
 			parse_let(in, out);
 		}
 
-		else if (!strcmp(buff, "const")) {
+		else if !strcmp(buff, "const") {
 			fprintf(out, "const ");
 			parse_let(in, out);
 		}
 
-		else if (!strcmp(buff, "fn")) {
+		else if !strcmp(buff, "fn") {
 			parse_fn(in, out);
 		}
 
-		else if (!strcmp(buff, "start")) {
+		else if !strcmp(buff, "start") {
 			fprintf(out, "int main(int argc, char *argv[])\n");
 		}
 
-		else if (!strcmp(buff, "use")) {
+		else if !strcmp(buff, "use") {
 			fprintf(out, "#include ");
 			parse_include(in, out);
 		}
 
-		else if (!strcmp(buff, "if")) {
+		else if !strcmp(buff, "if") {
 			fprintf(out, "if ");
 			parse_if(in, out);
 		}
 
-		else if (!strcmp(buff, "for")) {
+		else if !strcmp(buff, "for") {
 			fprintf(out, "for ");
 			parse_for(in, out);
 		}
 
-		else if (!strcmp(buff, "cfor")) {
+		else if !strcmp(buff, "cfor") {
 			fprintf(out, "for ");
 		}
 
+		else if !strcmp(buff, "def") {
+			fprintf(out, "#define ");
+		}
+
 		else {
-			if (end_of_keyword)
+			if end_of_keyword
 				fprintf(out, "%s%c", buff, c);
 		}
 
@@ -411,7 +421,7 @@ void parse(char *name)
 		buff[buff_index++] = c;
 
 		// end of a keyword
-		if (end_of_keyword) {
+		if end_of_keyword {
 			clear_buff(buff);
 			buff_index = 0;
 		}

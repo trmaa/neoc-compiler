@@ -1,0 +1,3 @@
+#define BUFF_LEN 256
+
+fn clear_buff(buff[BUFF_LEN]: char) ~void;

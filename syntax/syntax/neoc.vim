@@ -3,45 +3,52 @@
 "
 
 if exists("b:current_syntax")
-	finish
+    finish
 endif
 
-" keywords
-syntax keyword neoc_keyword if start else while for use return fn EXIT_FAILURE EXIT_SUCCESS continue break foreach switch case default cfor
-syntax keyword neoc_type let const in
+" Clear any existing syntax first
+syntax clear
 
-" syntax keyword neoc_funcs main printf fprintf sprintf getc getchar scanf sscanf fscanf strcpy strcmp
+" ONLY COMMENTS - nothing else
+syntax match neoc_comment "//.*$"
+syntax region neoc_comment start="/\*" end="\*/"
+
+" Types
+syntax keyword neoc_type let const static
+syntax keyword neoc_type i8 u8 i16 u16 i32 u32 i64 u64 f32 f64 int float void char double long struct enum bool FILE
+syntax match neoc_type "%."
+syntax match neoc_type "\\."
+
+" Functions
+syntax keyword neoc_keyword if start in EOF else while for return fn EXIT_FAILURE EXIT_SUCCESS continue break foreach switch case default cfor goto
 syntax match neoc_functionCall "\k\+\s*\ze("
 syntax match neoc_functionName "\<fn\s\+\zs\k\+" contained
 
-syntax keyword neoc_type i8 u8 i16 u16 i32 u32 i64 u64 f32 f64 int float void char double long struct enum bool
+" Strings
+syntax region neoc_string start=+"+ end=+"+ skip=+\\"+
+syntax region neoc_char start=+'+ end=+'+ skip=+\\'+
 
-" comments
-syntax region neoc_comment start=/\/\// end=/\n/
-
-" strings
-syntax region neoc_string start=/"/ end=/"/ skip=/\\"/
-syntax region neoc_char start=/'/ end=/'/ skip=/\\'/
-
-" numbers
+" Numbers
 syntax match neoc_number "\<\d\+\>"
 syntax match neoc_number "\<\d\+\.\d\+\>"
-syntax match neoc_number "\<0b\d\+\>"
-syntax match neoc_number "\<0x.\+\>"
+syntax match neoc_number "\<0b[01]\+\>"
+syntax match neoc_number "\<0x[0-9a-fA-F]\+\>"
+syntax keyword neoc_number true false
 
-" operators
-syntax match neoc_operator "[+\-*/%<>!&|]"
+" Preprocessor directives
+syntax match neoc_preproc "^#.*$"
+syntax match neoc_preproc "use .*$"
+syntax match neoc_preproc "def .*$"
 
-" set highlights
-highlight default link neoc_keyword keyword
-highlight default link neoc_type type
-highlight default link neoc_comment comment
-highlight default link neoc_string string
-highlight default link neoc_char string
-highlight default link neoc_number number
-" highlight default link neoc_operator operator
-
+highlight default link neoc_comment Comment
+highlight default link neoc_keyword Keyword
+highlight default link neoc_type Type
+highlight default link neoc_string String
+highlight default link neoc_char Character
+highlight default link neoc_number Number
+highlight default link neoc_operator Operator
 highlight default link neoc_functionName Function
 highlight default link neoc_functionCall Function
+highlight default link neoc_preproc PreProc
 
 let b:current_syntax = "neoc"

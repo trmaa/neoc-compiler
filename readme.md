@@ -49,3 +49,8 @@ start {
 2. Recompile NCC in NC...
 3. Error checking.
 4. Comments.
+
+## BUGS
+
++ let arr[len * 4] = ""; inferrs to int not char
++ if strlen(str) == n //... doesn't put the last )

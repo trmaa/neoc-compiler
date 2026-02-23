@@ -15,33 +15,32 @@
  * License: GPL
  * Author: trmaa <trmaayt@gmail.com> 21-2-2026 (Pablo Trik Marín)
  */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include "buff.h"
-#include "parser.h"
 
-void help()
-{
+use <stdio.nh>
+use <stdlib.nh>
+use <string.nh>
+use <stdbool.nh>
+use "buff.nh"
+use "parser.nh"
+
+fn help() ~void {
 	fprintf(stderr, "\e[32mUSE ALWAYS: ncc 0.nc 1.nc ... -o out\e[0m\n");
 }
 
-int main(int argc, char *argv[])
-{
-	bool clean = true;
+start {
+	let clean = true;
 
 	system("mkdir -p obj");
 
-	char out[BUFF_LEN] = "a.out";
+	let out[BUFF_LEN] = "a.out";
 
-	for (int i = 1; i < argc; i++) {
-		if (!strcmp(argv[i], "-o")) {
+	for let i in 1..argc {
+		if !strcmp(argv[i], "-o") {
 			strcpy(out, argv[++i]);	
 			break;
 		}
 
-		if (!strcmp(argv[i], "-c")) {
+		if !strcmp(argv[i], "-c") {
 			clean = false;
 			continue;
 		}
@@ -49,10 +48,10 @@ int main(int argc, char *argv[])
 		parse(argv[i]);
 	}
 	
-	char cmd[BUFF_LEN * 4] = "";
+	let cmd[BUFF_LEN*4] = "";
 	sprintf(cmd, "gcc obj/*.c -o %s", out);
 	system(cmd);
 
-	if (clean)
+	if clean
 		system("rm -r obj");
 }
