@@ -31,8 +31,6 @@ int main(int argc, char *argv[])
 {
 	bool clean = true;
 
-	help();
-
 	system("mkdir -p obj");
 
 	char out[BUFF_LEN] = "a.out";
@@ -61,6 +59,4 @@ int main(int argc, char *argv[])
 
 	if (clean)
 		system("rm -r obj");
-
-	fprintf(stderr, "Done!!! :)\n");
 }

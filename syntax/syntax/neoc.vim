@@ -9,7 +9,7 @@ if exists("b:current_syntax")
 endif
 
 " keywords
-syntax keyword neoc_keyword if else while for use return fn let const
+syntax keyword neoc_keyword if main else while for use return fn let const
 
 " syntax keyword neoc_funcs main printf fprintf sprintf getc getchar scanf sscanf fscanf strcpy strcmp
 syntax match neoc_functionCall "\k\+\s*\ze("
@@ -22,6 +22,7 @@ syntax match neoc_comment "//.*$"  " single-line comments
 
 " strings
 syntax region neoc_string start=/"/ end=/"/ skip=/\\"/
+syntax region neoc_char start=/'/ end=/'/ skip=/\\'/
 
 " numbers
 syntax match neoc_number "\<\d\+\>"
@@ -35,6 +36,7 @@ highlight default link neoc_keyword keyword
 highlight default link neoc_type type
 highlight default link neoc_comment comment
 highlight default link neoc_string string
+highlight default link neoc_char string
 highlight default link neoc_number number
 highlight default link neoc_operator operator
 
