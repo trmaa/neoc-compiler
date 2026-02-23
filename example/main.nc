@@ -19,4 +19,7 @@ start {
 			continue;
 		hello(name);
 	}
+
+	cfor (int i = 0; i < 10; i++)
+		printf("%d\n", i);
 }
