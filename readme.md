@@ -19,7 +19,7 @@ $ ncc src0.nc src1.nc header0.nh ... -o out
 
 ## Example
 
-```neoc
+```rust
 use <stdio.nh>
 
 fn sum(a: i32, b: i32) ~i32 {
