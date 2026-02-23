@@ -7,7 +7,7 @@ if exists("b:current_syntax")
 endif
 
 " keywords
-syntax keyword neoc_keyword if start else while for use return fn EXIT_FAILURE EXIT_SUCCESS continue break foreach switch case default
+syntax keyword neoc_keyword if start else while for use return fn EXIT_FAILURE EXIT_SUCCESS continue break foreach switch case default cfor
 syntax keyword neoc_type let const in
 
 " syntax keyword neoc_funcs main printf fprintf sprintf getc getchar scanf sscanf fscanf strcpy strcmp

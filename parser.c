@@ -392,6 +392,10 @@ void parse(char *name)
 			parse_for(in, out);
 		}
 
+		else if (!strcmp(buff, "cfor")) {
+			fprintf(out, "for ");
+		}
+
 		else {
 			if (end_of_keyword)
 				fprintf(out, "%s%c", buff, c);

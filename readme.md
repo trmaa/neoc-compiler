@@ -46,5 +46,6 @@ start {
 ## TODO
 
 1. Give more type infering support.
+2. Recompile NCC in NC...
 3. Error checking.
 4. Comments.
