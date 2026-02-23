@@ -7,6 +7,8 @@
  * FILE *out (obj/.c file), for each file.
  *
  * Then it compiles with gcc all the generated C files into "out".
+ * 
+ * Think of it like a giant macro.
  *
  * If there is not -c flag, it removes the obj/ dir.
  *

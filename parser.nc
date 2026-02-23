@@ -314,7 +314,7 @@ fn parse_for(in: FILE*, out: FILE*) ~static void {
 	let i = 0;
 
 	while ((c = getc(in)) != EOF && c != '{' && c != '\n') {
-		if (c == '(' || c == ')')
+		if c == '(' || c == ')'
 			continue;
 
 		buff[i++] = c;
