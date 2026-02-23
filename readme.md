@@ -49,6 +49,7 @@ start {
 1. Give more type infering support.
 2. Error checking.
 3. Comments.
+4. Function type for args ( void (*func)() ).
 
 ## BUGS
 
