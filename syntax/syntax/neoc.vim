@@ -15,7 +15,7 @@ syntax keyword neoc_keyword if start else while for use return fn let const
 syntax match neoc_functionCall "\k\+\s*\ze("
 syntax match neoc_functionName "\<fn\s\+\zs\k\+" contained
 
-syntax keyword neoc_type n8 z8 n16 z16 n32 z32 n64 z64 f32 f64 int float void char double long
+syntax keyword neoc_type n8 z8 n16 z16 n32 z32 n64 z64 f32 f64 int float void char double long struct enum
 
 " comments
 syntax match neoc_comment "//.*$"  " single-line comments
@@ -29,7 +29,7 @@ syntax match neoc_number "\<\d\+\>"
 syntax match neoc_number "\<\d\+\.\d\+\>"
 
 " operators
-syntax match neoc_operator "[+\-*/%=<>!&|]"
+syntax match neoc_operator "[+\-*/%<>!&|]"
 
 " set highlights
 highlight default link neoc_keyword keyword
@@ -38,7 +38,7 @@ highlight default link neoc_comment comment
 highlight default link neoc_string string
 highlight default link neoc_char string
 highlight default link neoc_number number
-highlight default link neoc_operator operator
+" highlight default link neoc_operator operator
 
 highlight default link neoc_functionName Function
 highlight default link neoc_functionCall Function

@@ -6,7 +6,13 @@
 
 void parse_type(char type[BUFF_LEN])
 {
-	char bits = atoi(&type[1]);	
+	if (type[strlen(type)-1] == ';') // it happens when let a: int;
+		type[strlen(type)-1] = 0;
+	
+	if (type[0] == ' ')
+		type++;
+
+	char bits = atoi(&type[1]);
 
 	bool pointer = false;
 
@@ -116,12 +122,29 @@ inferr:
 
 	goto end;
 typed:
-	fscanf(in, " %s = %[^;];\n", type, val);
+	{
+		int state = 0; // warning: not comming back
+		for (i = 0; (c = getc(in)) != EOF;) {
+			if (c == '=') {
+				state = 1;
+				i = 0;
+			}
+
+			if (c == ';')
+				break;
+
+			switch (state) {
+				case 0:
+					type[i++] = c;
+					break;
+				case 1:
+					val[i++] = c;
+					break;
+			}
+		}
+	}
 	goto end;
 end:
-	if (type[strlen(type)-1] == ';') // it happens when let a: int;
-		type[strlen(type)-1] = 0;
-
 	parse_type(type);
 
 	if (val[0]) // got a value
@@ -215,6 +238,22 @@ void parse_fn(FILE *in, FILE *out)
 		fprintf(out, "%s %s);\n", var_type, var_name);
 }
 
+void parse_include(FILE *in, FILE *out)
+{
+	char c;
+
+	while ((c = getc(in)) != EOF) {
+		putc(c, out);
+		if (c == '.')
+			break;
+	}
+
+	char _;
+	fscanf(in, "n%c%c\n", &c, &_);
+
+	fprintf(out, "%c%c\n", c, _);
+}
+
 void parse(char *name)
 {
 	int end = strlen(name);
@@ -272,6 +311,7 @@ void parse(char *name)
 
 		else if (!strcmp(buff, "use")) {
 			fprintf(out, "#include ");
+			parse_include(in, out);
 		}
 
 		else {
