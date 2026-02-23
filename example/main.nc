@@ -1,12 +1,15 @@
 use <stdio.h>
+use <stdlib.h>
 use <string.h>
+use "hello.h"
 
-fn hello(name: char*) ~void {
-	printf("Hello, %s\n", name);
-}
+start {
+	if (argc < 2) {
+		printf("Give a name as arg...\n");
+		exit(1);
+	}
 
-main {
-	let name[256]: n8;
+	let name[256]: char;
 	strcpy(name, argv[1]);
 
 	let iters = 10;

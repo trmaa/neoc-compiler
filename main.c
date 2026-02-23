@@ -46,10 +46,6 @@ int main(int argc, char *argv[])
 			continue;
 		}
 
-		int end = strlen(argv[i]);
-		for (int j = end - 3; j < end; j++)
-			argv[i][j] = 0;
-
 		parse(argv[i]);
 	}
 	

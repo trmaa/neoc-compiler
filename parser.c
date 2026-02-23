@@ -217,18 +217,26 @@ void parse_fn(FILE *in, FILE *out)
 
 void parse(char *name)
 {
+	int end = strlen(name);
+	char ext = name[end-1];
+	for (int j = end - 3; j < end; j++)
+		name[j] = 0;
+
 	FILE *in, *out;
 
 	{
 		char inpath[BUFF_LEN] = "";
 		char outpath[BUFF_LEN] = "";
 
-		sprintf(inpath, "%s.nc", name);
-		sprintf(outpath, "obj/%s.c", name);
+		sprintf(inpath, "%s.n%c", name, ext);
+		sprintf(outpath, "obj/%s.%c", name, ext);
 
 		in = fopen(inpath, "r");
 		out = fopen(outpath, "w");
 	}
+
+	if (ext == 'h')
+		fprintf(out, "#pragma once\n");
 
 	char c;
 
@@ -258,7 +266,7 @@ void parse(char *name)
 			parse_fn(in, out);
 		}
 
-		else if (!strcmp(buff, "main")) {
+		else if (!strcmp(buff, "start")) {
 			fprintf(out, "int main(int argc, char *argv[])\n");
 		}
 

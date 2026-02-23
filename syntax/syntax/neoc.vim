@@ -9,7 +9,7 @@ if exists("b:current_syntax")
 endif
 
 " keywords
-syntax keyword neoc_keyword if main else while for use return fn let const
+syntax keyword neoc_keyword if start else while for use return fn let const
 
 " syntax keyword neoc_funcs main printf fprintf sprintf getc getchar scanf sscanf fscanf strcpy strcmp
 syntax match neoc_functionCall "\k\+\s*\ze("
