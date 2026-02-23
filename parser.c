@@ -4,7 +4,8 @@
 #include <stdbool.h>
 #include "buff.h"
 
-void parse_type(char type[BUFF_LEN])
+static void
+parse_type(char type[BUFF_LEN])
 {
 	if (type[strlen(type)-1] == ';') // it happens when let a: int;
 		type[strlen(type)-1] = 0;
@@ -70,9 +71,10 @@ void parse_type(char type[BUFF_LEN])
 		type[strlen(type)] = '*';
 }
 
-void parse_let(FILE *in, FILE *out)
+static void
+parse_let(FILE *in, FILE *out)
 {
-	char type[BUFF_LEN] = ""; // avoid overlaping trash
+	char type[BUFF_LEN] = ""; // avoid trash
 	char name[BUFF_LEN] = "";
 	char val[BUFF_LEN] = "";
 
@@ -154,7 +156,8 @@ end:
 		fprintf(out, "%s %s;\n", type, name);
 }
 
-void parse_fn(FILE *in, FILE *out)
+static void
+parse_fn(FILE *in, FILE *out)
 {
 	char type[BUFF_LEN] = "";
 	char whole_func[BUFF_LEN * 4] = "";
@@ -241,7 +244,8 @@ void parse_fn(FILE *in, FILE *out)
 		fprintf(out, "%s %s);\n", var_type, var_name);
 }
 
-void parse_include(FILE *in, FILE *out)
+static void
+parse_include(FILE *in, FILE *out)
 {
 	char c;
 
@@ -257,7 +261,8 @@ void parse_include(FILE *in, FILE *out)
 	fprintf(out, "%c%c\n", c, _);
 }
 
-void parse_if(FILE *in, FILE *out)
+static void
+parse_if(FILE *in, FILE *out)
 {
 	// Types:
 	// if ()
@@ -291,7 +296,8 @@ type1:
 	return;
 }
 
-void parse_for(FILE *in, FILE *out)
+static void
+parse_for(FILE *in, FILE *out)
 {
 	putc('(', out);
 
