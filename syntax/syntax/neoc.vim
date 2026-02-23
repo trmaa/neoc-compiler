@@ -21,6 +21,8 @@ syntax region neoc_char start=/'/ end=/'/ skip=/\\'/
 " numbers
 syntax match neoc_number "\<\d\+\>"
 syntax match neoc_number "\<\d\+\.\d\+\>"
+syntax match neoc_number "\<\db\d\+\>"
+syntax match neoc_number "\<\dx\d\+\>"
 
 " operators
 syntax match neoc_operator "[+\-*/%<>!&|]"
