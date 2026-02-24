@@ -68,6 +68,8 @@ fn parse_type(type[BUFF_LEN]: char) ~static void {
 
 	if pointer
 		type[strlen(type)] = '*';
+
+	type[strlen(type)] = 0; // just in case...
 }
 
 fn parse_let(in: FILE*, out: FILE*) ~static void {
@@ -183,7 +185,8 @@ fn parse_fn(in: FILE*, out: FILE*) ~static void {
 
 	for let i in 0..len
 		if whole_func[i] == '~'
-			sprintf(type, "%s", &whole_func[i+1]);
+			strcpy(type, &whole_func[i+1]);
+			//sprintf(type, "%s", &whole_func[i+1]);
 			//sscanf(&whole_func[i], "~%s", type);
 	
 	// type is set
@@ -232,8 +235,9 @@ fn parse_fn(in: FILE*, out: FILE*) ~static void {
 			read = 0;
 
 			parse_type(var_type);
-
 			fprintf(out, "%s %s, ", var_type, var_name);
+			clear_buff(var_type); // avoid bugs
+			clear_buff(var_name);
 			continue;
 		}
 
@@ -247,6 +251,7 @@ fn parse_fn(in: FILE*, out: FILE*) ~static void {
 		}
 	}
 
+	// last param
 	parse_type(var_type);
 
 	if is_defined

@@ -71,6 +71,8 @@ start {
 + if strlen(str) == n //... doesn't put the last )
 + while (expr) == -1 { will not compile because first char is a (
 + it parses syntax inside of strings and multiline comments, and variable names
++ func params cant have single char names
++ the last word at the end of a vile is never read
 
 ## GUIDE
 
