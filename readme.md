@@ -173,20 +173,3 @@ start {}
 fn main() ~int {}
 int main(void) {}
 ```
-
-```rust
-// this may be better than
-fn main() ~int
-{
-        for let i in 0..10 {
-                return 0;
-        }
-}
-
-//this
-fn main() ~int {
-        for let i in 0..10 {
-                return 0;
-        }
-}
-´´´
