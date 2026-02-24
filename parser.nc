@@ -178,7 +178,7 @@ fn parse_fn(in: FILE*, out: FILE*) ~static void {
 	let c: char;
 	let i = 0;
 
-	while ((c = getc(in)) != EOF && c != '{') // printf doesn't seem to work in this case...
+	while ((c = getc(in)) != EOF && c != '\n') // printf doesn't seem to work in this case...
 		whole_func[i++] = c;
 
 	let len: int = i;
@@ -187,16 +187,20 @@ fn parse_fn(in: FILE*, out: FILE*) ~static void {
 		if whole_func[i] == '~'
 			strcpy(type, &whole_func[i+1]);
 			//sprintf(type, "%s", &whole_func[i+1]);
-			//sscanf(&whole_func[i], "~%s", type);
+			//sscanf(&whole_func[i], "~%[^.*\n]\n", type);
 	
 	// type is set
 	
-	type[strlen(type)-1] = 0; // eliminate a space in the end
-	
 	let is_defined: bool = type[strlen(type)-1] != ';';
 
-	if !is_defined
-		type[strlen(type)-1] = 0;
+	if !is_defined {
+		type[strlen(type)-1] = 0; // eliminate semicotlin
+	} else {
+		if (type[strlen(type)-1] == '{') {
+			type[strlen(type)-1] = 0;
+			type[strlen(type)-1] = 0;
+		}
+	}
 
 	parse_type(type);
 
@@ -369,7 +373,7 @@ fn parse(name: char*) ~void {
 
 		// parsing
 		if !end_of_keyword {
-			true; // keep on going to avoid bugs
+			true; // keep on going to avoid bugs with keywords on varnames
 		}
 
 		else if !strcmp(buff, "//") {
