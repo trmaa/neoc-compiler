@@ -15,7 +15,7 @@ syntax region neoc_comment start="/\*" end="\*/"
 
 " Types
 syntax keyword neoc_type let const static
-syntax keyword neoc_type i8 u8 i16 u16 i32 u32 i64 u64 f32 f64 int float void char double long struct enum bool FILE
+syntax keyword neoc_type i8 u8 i16 u16 i32 u32 i64 u64 f32 f64 int float void char double long struct enum bool FILE clock_t short
 syntax match neoc_type "%."
 syntax match neoc_type "\\."
 
