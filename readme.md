@@ -19,9 +19,17 @@ Any C code is a NC valid code too btw, NC is just an extra layer of syntax.
 
 ## How to
 
-```console
-$ ncc src0.nc src1.nc header0.nh ... -o out
-```
+### Install
+
+`./ncc *.nc *.nh -o /usr/bin/ncc`
+
+If the given ncc binary is not compatible with your OS, try compiling the
+compiler with a C compiler from the source provided at legacy_ncc/. This is the
+exact source, but instead of writen in neoc its writen in c.
+
+### Use it
+
+`ncc src0.nc src1.nc header0.nh ... -o out`
 
 ## Example
 
@@ -73,7 +81,7 @@ BTW: almost all C code is valid NeoC code.
 
 ### Features
 
-```go
+```rust
 
 for let i in var0..var1 {
     ...
@@ -111,7 +119,7 @@ chars.
 
 Do not cut strings in half.
 
-```go
+```rust
 // wrong
 #include <stdio.h>
 #define N 10
@@ -121,7 +129,7 @@ use <stdio.nh>
 def N 10
 ```
 
-```go
+```rust
 // wrong
 char c = 'a';
 let c: char = 'a';
@@ -132,14 +140,14 @@ let c = 'a';
 char c;
 ```
 
-```go
+```rust
 // wrong
 int sum(int a, int b);
 // right
 fn sum(a: int, b: int) ~int;
 ```
 
-```go
+```rust
 // wrong
 struct color {
     let a: char;
@@ -151,7 +159,7 @@ struct color {
 struct color { char a, b, g, r; };
 ```
 
-```go
+```rust
 // wrong
 fn main(argc: int, argv[]: char) ~int {}
 int main() {}
@@ -162,7 +170,7 @@ fn main() ~int {}
 int main(void) {}
 ```
 
-```go
+```rust
 // this may be better than
 fn main() ~int
 {
