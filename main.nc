@@ -22,6 +22,7 @@ use <stdio.nh>
 use <stdlib.nh>
 use <string.nh>
 use <stdbool.nh>
+use <time.nh>
 use "buff.nh"
 use "parser.nh"
 
@@ -30,12 +31,11 @@ fn help() ~void {
 }
 
 start {
+	let begin: clock_t = clock();
+	
 	let clean = true;
-
 	system("mkdir -p obj");
-
 	let out[BUFF_LEN] = "a.out";
-
 	let flags[BUFF_LEN*4] = "";
 
 	for let i in 1..argc {
@@ -59,6 +59,7 @@ start {
 			continue;
 		}
 
+		printf("\e[1;32mNCC %s\n\e[0m", argv[i]);
 		parse(argv[i]);
 	}
 	
@@ -68,4 +69,8 @@ start {
 
 	if clean
 		system("rm -r obj");
+	
+	let end: clock_t = clock();
+	let elapsed: double = end - begin;
+	printf("Done in %d ms!!!\n", elapsed);
 }
