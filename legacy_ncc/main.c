@@ -22,23 +22,25 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <time.h>
 #include "buff.h"
 #include "parser.h"
 void help( )
-{
-	fprintf(stderr, "\e[32mUSE ALWAYS: ncc 0.nc 1.nc ... -o out\e[0m\n");
+{	fprintf(stderr, "\e[32mUSE ALWAYS: ncc 0.nc 1.nc ... -o out\e[0m\n");
 }
 
 int main(int argc, char *argv[])
 {
+	 clock_t begin =  clock();
+	
 	bool clean = true;
 system("mkdir -p obj");
-
 	char out[BUFF_LEN] = "a.out";
+char flags[BUFF_LEN*4] = "";
 for (int i = 1; i < argc; i++){
 		if (!strcmp(argv[i], "-o") ){
 			strcpy(out, argv[++i]);
-			break;
+			continue;
 		}
 
 		if (!strcmp(argv[i], "-c") ){
@@ -46,13 +48,28 @@ for (int i = 1; i < argc; i++){
 			continue;
 		}
 
+		if (!strcmp(argv[i], "-h") ){
+			help();
+			exit(0); //TODO: clean obj/
+		}
+
+		if (!strcmp(argv[i], "-f") ){
+			strcpy(flags, argv[++i]);
+			continue;
+		}
+
+		printf("\e[1;32mNCC %s\n\e[0m", argv[i]);
 		parse(argv[i]);
 	}
 	
 	char cmd[BUFF_LEN*4] = "";
-sprintf(cmd, "gcc obj/*.c -o %s", out);
+sprintf(cmd, "gcc obj/*.c -o %s %s", out, flags);
 	system(cmd);
 
 	if (clean)
 		system("rm -r obj");
+	
+	 clock_t end =  clock();
+	 double elapsed =  end - begin;
+	printf("Done in %d ms!!!\n", elapsed);
 }

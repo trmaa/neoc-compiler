@@ -4,21 +4,23 @@
 #include <stdbool.h>
 #include "buff.h"
 static void parse_type(char type[BUFF_LEN])
-{
-	//it happens when let a: int;
+{	//it happens when let a: int;
+	if (type[strlen(type)-1] == ' ')
+		type[strlen(type)-1] = 0;
+
 	if (type[strlen(type)-1] == ';')
 		type[strlen(type)-1] = 0;
 	
 	if (type[0] == ' ')
 		type++;
 
-	 char  bits =  atoi(&type[1]);
-
 	bool pointer = false;
 if (type[strlen(type)-1] == '*' ){
 		pointer = true;
 		type[strlen(type)-1] = 0;
 	}
+
+	 char bits =  atoi(&type[1]);
 
 	switch (type[0]) {
 	case 'i':
@@ -70,8 +72,7 @@ if (type[strlen(type)-1] == '*' ){
 }
 
 static void parse_let(FILE* in, FILE* out)
-{
-	char type[BUFF_LEN] = ""; // avoid trash;
+{	char type[BUFF_LEN] = ""; // avoid trash;
 char name[BUFF_LEN] = "";
 char val[BUFF_LEN] = "";
 bool arr = false;
@@ -145,16 +146,10 @@ for (i = 0; (c = getc(in)) != EOF;) {
 			}
 		}
 
-		switch (state) {
-		case 0:
-			if (type[i-1] == ';')
-				type[i-1] = 0;
-			break;
-		case 1:
-			if (val[i-1] == ';')
-				val[i-1] = 0;
-			break;
-		}
+		if (type[i-1] == ';')
+			type[i-1] = 0;
+		if (val[i-1] == ';')
+			val[i-1] = 0;
 	}
 	goto end;
 end:
@@ -167,29 +162,33 @@ end:
 }
 
 static void parse_fn(FILE* in, FILE* out)
-{
-	char type[BUFF_LEN] = "";
+{	char type[BUFF_LEN] = "";
 char whole_func[BUFF_LEN*4] = "";
  char c;
 	int i = 0;
-while ((c = getc(in)) != EOF && c != '{') // printf doesn't seem to work in this case...
+while ((c = getc(in)) != EOF && c != '\n') // printf doesn't seem to work in this case...
 		whole_func[i++] = c;
 
-	 int  len =  i;
+	 int len =  i;
 
 	for (int i = 0; i < len; i++)
 		if (whole_func[i] == '~')
-			sprintf(type, "%s", &whole_func[i+1]);
-			//scanf(&whole_func[i], "~%s", type);
+			strcpy(type, &whole_func[i+1]);
+			//sprintf(type, "%s", &whole_func[i+1]);
+			//sscanf(&whole_func[i], "~%[^.*\n]\n", type);
 	
 	//type is set
 	
-	type[strlen(type)-1] = 0; //eliminate a space in the end
-	
-	 bool  is_defined =  type[strlen(type)-1] != ';';
+	 bool is_defined =  type[strlen(type)-1] != ';';
 
-	if (!is_defined)
-		type[strlen(type)-1] = 0;
+	if (!is_defined ){
+		type[strlen(type)-1] = 0; //eliminate semicotlin
+	} else {
+		if (type[strlen(type)-1] == '{') {
+			type[strlen(type)-1] = 0;
+			type[strlen(type)-1] = 0;
+		}
+	}
 
 	parse_type(type);
 
@@ -224,8 +223,9 @@ for (; i < len && whole_func[i] != ')'; i++) {
 			read = 0;
 
 			parse_type(var_type);
-
 			fprintf(out, "%s %s, ", var_type, var_name);
+			clear_buff(var_type); //avoid bugs
+			clear_buff(var_name);
 			continue;
 		}
 
@@ -239,6 +239,7 @@ for (; i < len && whole_func[i] != ')'; i++) {
 		}
 	}
 
+	//last param
 	parse_type(var_type);
 
 	if (is_defined)
@@ -248,8 +249,7 @@ for (; i < len && whole_func[i] != ')'; i++) {
 }
 
 static void parse_include(FILE* in, FILE* out)
-{
-	 char c;
+{	 char c;
 
 	while ((c = getc(in)) != EOF) {
 		putc(c, out);
@@ -264,8 +264,7 @@ static void parse_include(FILE* in, FILE* out)
 }
 
 static void parse_if(FILE* in, FILE* out)
-{
-	//Types:
+{	//Types:
 	//if ()
 	//if ... {
 	//if ... \n
@@ -298,8 +297,7 @@ type1:
 }
 
 static void parse_for(FILE* in, FILE* out)
-{
-	putc('(', out);
+{	putc('(', out);
 
 	 char c;
 	char buff[BUFF_LEN*4] = "";
@@ -323,9 +321,8 @@ while ((c = getc(in)) != EOF && c != '{' && c != '\n') {
 }
 
 void parse(char* name)
-{
-	 int  end =  strlen(name);
-	 char  ext =  name[end-1];
+{	 int end =  strlen(name);
+	 char ext =  name[end-1];
 
 	for (int i = end-3; i < end; i++)
 		name[i] = 0;
@@ -355,7 +352,11 @@ while ((c = getc(in)) != EOF) {
 		end_of_keyword = c == ' ' || c == '\n' || c == '\t';
 
 		//parsing
-		if (!strcmp(buff, "//") ){
+		if (!end_of_keyword ){
+			true; //keep on going to avoid bugs with keywords on varnames
+		}
+
+		else if (!strcmp(buff, "//") ){
 			clear_buff(buff);
 
 			fprintf(out, "//");
@@ -410,8 +411,7 @@ while ((c = getc(in)) != EOF) {
 		}
 
 		else {
-			if (end_of_keyword)
-				fprintf(out, "%s%c", buff, c);
+			fprintf(out, "%s%c", buff, c);
 		}
 
 		//reading
