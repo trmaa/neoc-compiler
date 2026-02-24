@@ -36,10 +36,12 @@ start {
 
 	let out[BUFF_LEN] = "a.out";
 
+	let flags[BUFF_LEN*4] = "";
+
 	for let i in 1..argc {
 		if !strcmp(argv[i], "-o") {
 			strcpy(out, argv[++i]);
-			break;
+			continue;
 		}
 
 		if !strcmp(argv[i], "-c") {
@@ -47,11 +49,21 @@ start {
 			continue;
 		}
 
+		if !strcmp(argv[i], "-h") {
+			help();
+			exit(0); // TODO: clean obj/
+		}
+
+		if !strcmp(argv[i], "-f") {
+			strcpy(flags, argv[++i]);
+			continue;
+		}
+
 		parse(argv[i]);
 	}
 	
 	let cmd[BUFF_LEN*4] = "";
-	sprintf(cmd, "gcc obj/*.c -o %s", out);
+	sprintf(cmd, "gcc obj/*.c -o %s %s", out, flags);
 	system(cmd);
 
 	if clean
