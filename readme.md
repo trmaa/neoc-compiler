@@ -69,6 +69,7 @@ start {
 
 + let arr[len * 4] = ""; inferrs to int because of the number, not char
 + if strlen(str) == n //... doesn't put the last )
++ while (expr) == -1 { will not compile because first char is a (
 
 ## GUIDE
 
