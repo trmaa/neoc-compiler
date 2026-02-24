@@ -59,6 +59,7 @@ start {
 
 ## TODO
 
+0. Add the pub keyword to make header files automatically and forget about them...
 0. Documentation.
 1. Give more type infering support.
 2. Error checking.
