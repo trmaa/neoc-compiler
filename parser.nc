@@ -6,13 +6,14 @@ use "buff.nh"
 
 fn parse_type(type[BUFF_LEN]: char) ~static void {
 	// it happens when let a: int;
+	if type[strlen(type)-1] == ' '
+		type[strlen(type)-1] = 0;
+
 	if type[strlen(type)-1] == ';'
 		type[strlen(type)-1] = 0;
 	
 	if type[0] == ' '
 		type++;
-
-	let bits: char = atoi(&type[1]);
 
 	let pointer = false;
 
@@ -20,6 +21,8 @@ fn parse_type(type[BUFF_LEN]: char) ~static void {
 		pointer = true;
 		type[strlen(type)-1] = 0;
 	}
+
+	let bits: char = atoi(&type[1]);
 
 	switch (type[0]) {
 	case 'i':
@@ -68,8 +71,6 @@ fn parse_type(type[BUFF_LEN]: char) ~static void {
 
 	if pointer
 		type[strlen(type)] = '*';
-
-	type[strlen(type)] = 0; // just in case...
 }
 
 fn parse_let(in: FILE*, out: FILE*) ~static void {
@@ -150,16 +151,10 @@ typed:
 			}
 		}
 
-		switch (state) {
-		case 0:
-			if type[i-1] == ';'
-				type[i-1] = 0;
-			break;
-		case 1:
-			if val[i-1] == ';'
-				val[i-1] = 0;
-			break;
-		}
+		if type[i-1] == ';'
+			type[i-1] = 0;
+		if val[i-1] == ';'
+			val[i-1] = 0;
 	}
 	goto end;
 end:
