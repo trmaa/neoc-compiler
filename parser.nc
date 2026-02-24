@@ -363,7 +363,11 @@ fn parse(name: char*) ~void {
 		end_of_keyword = c == ' ' || c == '\n' || c == '\t';
 
 		// parsing
-		if !strcmp(buff, "//") {
+		if !end_of_keyword {
+			true; // keep on going to avoid bugs
+		}
+
+		else if !strcmp(buff, "//") {
 			clear_buff(buff);
 
 			fprintf(out, "//");
@@ -418,8 +422,7 @@ fn parse(name: char*) ~void {
 		}
 
 		else {
-			if end_of_keyword
-				fprintf(out, "%s%c", buff, c);
+			fprintf(out, "%s%c", buff, c);
 		}
 
 		// reading
