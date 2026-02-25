@@ -1,3 +1,22 @@
+/*
+ * NEOC Compiler (aka: NCC), ALPHA 1.1
+ * parser.nc
+ *
+ * It iterates over each char at obj/<FILE *in>, and stores it in a buffer.
+ *
+ * When it reaches a blanch it decides based on the buffer content what to do:
+ * 	if (its a NeoC keyword it parses in a separete function what is suposed)
+ * 	to go there; if (not its just outputed as is and cleared (the buffer).)
+ *
+ * The output is stored at a C or H file.
+ * 
+ * License: GPL
+ * Author:
+ * 	trmaa <trmaayt@gmail.com>
+ *	25-2-2026
+ * 	(Pablo Trik Marín, whatsapp: +34 689 93 75 95)
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -1,3 +1,20 @@
+/*
+ * NEOC Compiler (aka: NCC), ALPHA 1.1
+ * header.nc
+ *
+ * It creates .nh files resolvig defines, includes, and public declarations.
+ *
+ * It iterates over the .nc input to search for (int  = ;  < ; ++)
+ * and runs the apropiate functions to output to the obj/<src>.nc or .nh as
+ * needed.
+ * 
+ * License: GPL
+ * Author:
+ * 	trmaa <trmaayt@gmail.com>
+ *	25-2-2026
+ * 	(Pablo Trik Marín, whatsapp: +34 689 93 75 95)
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include "buff.h"
