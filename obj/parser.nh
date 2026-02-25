@@ -1,1 +1,0 @@
-fn parse(name[BUFF_LEN]: char) ~void ;

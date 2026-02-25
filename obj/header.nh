@@ -1,1 +1,0 @@
-fn create_headers(name[BUFF_LEN]: char) ~void ;
