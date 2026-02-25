@@ -11,11 +11,9 @@
  * 	(Pablo Trik Marín, whatsapp: +34 689 93 75 95)
  */
 
-use "buff"
-
-def BUFF_LEN 256
-
-pub fn clear_buff(buff[BUFF_LEN]: char) ~void {
-	for let i in 0..BUFF_LEN
+#include "buff.h"
+void clear_buff( char buff[BUFF_LEN])
+{
+	for (int i = 0; i < BUFF_LEN; i++)
 		buff[i] = 0;
 }

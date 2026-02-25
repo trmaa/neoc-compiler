@@ -1,21 +1,28 @@
 /*
- * NEOC Compiler (aka: NCC)
+ * NEOC Compiler (aka: NCC), ALPHA 1.1
+ * main.nc
  *
- * USE: ncc [-c don't clean] files.nc [-o out path]
+ * USE: ncc [-c don't clean] [-h help] files.nc [-o out path] [-f compile flags]
  *
- * It inputs from FILE *in (.nc file), to the parser, and this outputs to 
- * FILE *out (obj/.c file), for (int  = ;  < ; ++)
+ * It gets as args the options and the nc files.
  *
- * Then it compiles with gcc all the generated C files into "out".
+ * It loops over the args to solve the options and create "parseable" .nc and .nh
+ * files at obj/. Think of this step as the -E step of the gcc compiler. It
+ * cleans the code, creating the header files, the includes, and the defines
+ * propperly.
+ *
+ * Then it parses the new .nc and .nh files into actual C code, to then compile
+ * that with GCC.
  * 
- * Think of it like a giant macro.
- *
- * If there is not -c flag, it removes the obj/ dir.
+ * Think of it like a giant C macro.
  *
  * Quite cool, huh??
  * 
  * License: GPL
- * Author: trmaa <trmaayt@gmail.com> 21-2-2026 (Pablo Trik Marín)
+ * Author:
+ * 	trmaa <trmaayt@gmail.com>
+ *	25-2-2026
+ * 	(Pablo Trik Marín, whatsapp: +34 689 93 75 95)
  */
 
 #include <stdio.h>

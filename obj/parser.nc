@@ -17,11 +17,11 @@
  * 	(Pablo Trik Marín, whatsapp: +34 689 93 75 95)
  */
 
-use <stdio>
-use <stdlib>
-use <string>
-use <stdbool>
-use "buff"
+use <stdio.nh>
+use <stdlib.nh>
+use <string.nh>
+use <stdbool.nh>
+use "buff.nh"
 
 fn parse_type(type[BUFF_LEN]: char) ~static void {
 	// it happens when let a: int;
@@ -348,7 +348,8 @@ fn parse_for(in: FILE*, out: FILE*) ~static void {
 	putc(c, out);
 }
 
-pub fn parse(name[BUFF_LEN]: char) ~void {
+fn parse(name[BUFF_LEN]: char) ~void  {
+
 	let end: int = strlen(name);
 	let ext: char = name[end-1];
 

@@ -25,15 +25,15 @@
  * 	(Pablo Trik Marín, whatsapp: +34 689 93 75 95)
  */
 
-use <stdio>
-use <stdlib>
-use <string>
-use <stdbool>
-use <time>
-use <dirent>
-use "buff"
-use "parser"
-use "header"
+use <stdio.nh>
+use <stdlib.nh>
+use <string.nh>
+use <stdbool.nh>
+use <time.nh>
+use <dirent.nh>
+use "buff.nh"
+use "parser.nh"
+use "header.nh"
 
 fn help() ~void {
 	fprintf(stderr, "\e[32mUSE ALWAYS: ncc 0.nc 1.nc ... -o out\e[0m\n");

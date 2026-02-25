@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "buff.h"
-static void parse_type(char type[BUFF_LEN])
+static void parse_type( char type[BUFF_LEN])
 {	//it happens when let a: int;
 	if (type[strlen(type)-1] == ' ')
 		type[strlen(type)-1] = 0;
@@ -71,7 +71,7 @@ if (type[strlen(type)-1] == '*' ){
 		type[strlen(type)] = '*';
 }
 
-static void parse_let(FILE* in, FILE* out)
+static void parse_let( FILE* in,  FILE*  out)
 {	char type[BUFF_LEN] = ""; // avoid trash;
 char name[BUFF_LEN] = "";
 char val[BUFF_LEN] = "";
@@ -161,7 +161,7 @@ end:
 		fprintf(out, "%s %s;\n", type, name);
 }
 
-static void parse_fn(FILE* in, FILE* out)
+static void parse_fn( FILE* in,  FILE*  out)
 {	char type[BUFF_LEN] = "";
 char whole_func[BUFF_LEN*4] = "";
  char c;
@@ -209,9 +209,6 @@ int read = 0;
 for (; i < len && whole_func[i] != ')'; i++) {
 		c = whole_func[i];
 
-		if (c == ' ')
-			continue;
-
 		if (c == ':' ){
 			fase = 1;
 			read = 0;
@@ -248,7 +245,7 @@ for (; i < len && whole_func[i] != ')'; i++) {
 		fprintf(out, "%s %s);\n", var_type, var_name);
 }
 
-static void parse_include(FILE* in, FILE* out)
+static void parse_include( FILE* in,  FILE*  out)
 {	 char c;
 
 	while ((c = getc(in)) != EOF) {
@@ -263,7 +260,7 @@ static void parse_include(FILE* in, FILE* out)
 	fprintf(out, "%c%c\n", c, _);
 }
 
-static void parse_if(FILE* in, FILE* out)
+static void parse_if( FILE* in,  FILE*  out)
 {	//Types:
 	//if ()
 	//if ... {
@@ -296,7 +293,7 @@ type1:
 	return;
 }
 
-static void parse_for(FILE* in, FILE* out)
+static void parse_for( FILE* in,  FILE*  out)
 {	putc('(', out);
 
 	 char c;
@@ -320,8 +317,9 @@ while ((c = getc(in)) != EOF && c != '{' && c != '\n') {
 	putc(c, out);
 }
 
-void parse(char* name)
-{	 int end =  strlen(name);
+void parse( char name[BUFF_LEN])
+{
+	 int end =  strlen(name);
 	 char ext =  name[end-1];
 
 	for (int i = end-3; i < end; i++)
@@ -333,7 +331,7 @@ void parse(char* name)
 	{
 		char inpath[BUFF_LEN] = "";
 char outpath[BUFF_LEN] = "";
-sprintf(inpath, "%s.n%c", name, ext);
+sprintf(inpath, "obj/%s.n%c", name, ext);
 		sprintf(outpath, "obj/%s.%c", name, ext);
 
 		in = fopen(inpath, "r");
@@ -356,7 +354,7 @@ while ((c = getc(in)) != EOF) {
 			true; //keep on going to avoid bugs with keywords on varnames
 		}
 
-		else if (!strcmp(buff, "//") ){
+		else if (strcmp(buff, "//") == 0 ){
 			clear_buff(buff);
 
 			fprintf(out, "//");
@@ -365,50 +363,46 @@ while ((c = getc(in)) != EOF) {
 			putc('\n', out);
 		}
 
-		else if (!strcmp(buff, "let") ){
+		else if (strcmp(buff, "let") == 0 ){
 			parse_let(in, out);
 		}
 
-		else if (!strcmp(buff, "const") ){
+		else if (strcmp(buff, "const") == 0 ){
 			fprintf(out, "const ");
 			parse_let(in, out);
 		}
 
-		else if (!strcmp(buff, "fn") ){
+		else if (strcmp(buff, "fn") == 0 ){
 			parse_fn(in, out);
 		}
 
-		else if (!strcmp(buff, "start") ){
+		else if (strcmp(buff, "start") == 0 ){
 			fprintf(out, "int main(int argc, char *argv[])\n");
 		}
 
-		else if (!strcmp(buff, "use") ){
+		else if (strcmp(buff, "use") == 0 ){
 			fprintf(out, "#include ");
 			parse_include(in, out);
 		}
 
-		else if (!strcmp(buff, "if") ){
+		else if (strcmp(buff, "if") == 0 ){
 			fprintf(out, "if ");
 			parse_if(in, out);
 		}
 
-		else if (!strcmp(buff, "while") ){
+		else if (strcmp(buff, "while") == 0 ){
 			fprintf(out, "while ");
 			parse_if(in, out);
 		}
 
-		else if (!strcmp(buff, "for") ){
+		else if (strcmp(buff, "for") == 0 ){
 			fprintf(out, "for ");
 			parse_for(in, out);
 		}
 
-		else if (!strcmp(buff, "cfor") ){
+		else if (strcmp(buff, "cfor") == 0 ){
 			fprintf(out, "for ");
-		}
-
-		else if (!strcmp(buff, "def") ){
-			fprintf(out, "#define ");
-		}
+		}	
 
 		else {
 			fprintf(out, "%s%c", buff, c);
