@@ -220,9 +220,6 @@ fn parse_fn(in: FILE*, out: FILE*) ~static void {
 	cfor (; i < len && whole_func[i] != ')'; i++) {
 		c = whole_func[i];
 
-		if c == ' '
-			continue;
-
 		if c == ':' {
 			fase = 1;
 			read = 0;
