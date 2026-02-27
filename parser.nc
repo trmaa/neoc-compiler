@@ -209,11 +209,9 @@ fn parse_fn(in: FILE*, out: FILE*) ~static void {
 
 	if !is_defined {
 		type[strlen(type)-1] = 0; // eliminate semicotlin
-	} else {
-		if (type[strlen(type)-1] == '{') {
-			type[strlen(type)-1] = 0;
-			type[strlen(type)-1] = 0;
-		}
+	} else if type[strlen(type)-1] == '{' {
+		type[strlen(type)-1] = 0;
+		type[strlen(type)-1] = 0;
 	}
 
 	parse_type(type);

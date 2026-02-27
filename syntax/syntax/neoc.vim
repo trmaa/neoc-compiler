@@ -20,7 +20,7 @@ syntax match neoc_type "%."
 syntax match neoc_type "\\."
 
 " Functions
-syntax keyword neoc_keyword pub if start in EOF else while for return fn EXIT_FAILURE EXIT_SUCCESS continue break foreach switch case default cfor goto
+syntax keyword neoc_keyword pub if start in else while for return fn continue break foreach switch case default cfor goto
 syntax match neoc_functionCall "\k\+\s*\ze("
 syntax match neoc_functionName "\<fn\s\+\zs\k\+" contained
 
@@ -33,7 +33,8 @@ syntax match neoc_number "\<\d\+\>"
 syntax match neoc_number "\<\d\+\.\d\+\>"
 syntax match neoc_number "\<0b[01]\+\>"
 syntax match neoc_number "\<0x[0-9a-fA-F]\+\>"
-syntax keyword neoc_number true false
+syntax match neoc_number "\<[A-Z_A-Z]\+\>"
+syntax keyword neoc_number true false NULL EOF EXIT_FAILURE EXIT_SUCCESS
 
 " Preprocessor directives
 syntax match neoc_preproc "^#.*$"
