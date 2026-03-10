@@ -20,7 +20,7 @@
  * 
  * License: GPL
  * Author:
- * 	trmaa <trmaayt@gmail.com>
+ * 	trmaa <mail@pablotrik.online>
  *	25-2-2026
  * 	(Pablo Trik Marín, whatsapp: +34 689 93 75 95)
  */

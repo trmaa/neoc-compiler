@@ -120,6 +120,13 @@ pub fn create_headers(name[BUFF_LEN]: char) ~void {
 			parse_define(in, outh);
 		}
 
+		else if strcmp(buff, "typedef") == 0 {
+			clear_buff(buff);
+			buff_index = 0;
+			fprintf(outh, "typedef ");
+			parse_define(in, outh);
+		}
+
 		else if strcmp(buff, "pub") == 0 {
 			clear_buff(buff);
 			buff_index = 0;

@@ -20,7 +20,7 @@ syntax match neoc_type "%."
 syntax match neoc_type "\\."
 
 " Functions
-syntax keyword neoc_keyword pub if start in else while for return fn continue break foreach switch case default cfor goto
+syntax keyword neoc_keyword typedef sizeof system pub if start in else while for return fn continue break foreach switch case default cfor goto
 syntax match neoc_functionCall "\k\+\s*\ze("
 syntax match neoc_functionName "\<fn\s\+\zs\k\+" contained
 
