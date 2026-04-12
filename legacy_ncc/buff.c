@@ -14,6 +14,8 @@
 #include "buff.h"
 void clear_buff( char buff[BUFF_LEN])
 {
-	for (int i = 0; i < BUFF_LEN; i++)
+	for (int i = (0<BUFF_LEN) ? 0 : 0-1;
+(0 >= BUFF_LEN || i < BUFF_LEN) && (0 < BUFF_LEN || i >= BUFF_LEN);
+i += (0<BUFF_LEN) ? 1 : -1)
 		buff[i] = 0;
 }

@@ -20,7 +20,7 @@
  * 
  * License: GPL
  * Author:
- * 	trmaa <trmaayt@gmail.com>
+ * 	trmaa <mail@pablotrik.online>
  *	25-2-2026
  * 	(Pablo Trik Marín, whatsapp: +34 689 93 75 95)
  */
@@ -47,7 +47,9 @@ system("mkdir -p obj");
 	system("rm obj/*");
 	char out[BUFF_LEN] = "a.out";
 char flags[BUFF_LEN*4] = "";
-for (int i = 1; i < argc; i++){
+for (int i = (1<argc) ? 1 : 1-1;
+(1 >= argc || i < argc) && (1 < argc || i >= argc);
+i += (1<argc) ? 1 : -1){
 		if (strcmp(argv[i], "-o") == 0 ){
 			strcpy(out, argv[++i]);
 			continue;

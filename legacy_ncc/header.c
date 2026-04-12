@@ -4,7 +4,9 @@
  *
  * It creates .nh files resolvig defines, includes, and public declarations.
  *
- * It iterates over the .nc input to search for (int  = ;  < ; ++)
+ * It iterates over the .nc input to search for (int  = (<) ?  : -1;
+( >=  ||  < ) && ( <  ||  >= );
+ += (<) ? 1 : -1)
  * and runs the apropiate functions to output to the obj/<src>.nc or .nh as
  * needed.
  * 
@@ -34,7 +36,9 @@ while ((c = getc(in)) != EOF && c != '\n')
 	char ext[3] = ".nh";
  char closing =  buff[end];
 
-	for (int i = 0; i < 3; i++)
+	for (int i = (0<3) ? 0 : 0-1;
+(0 >= 3 || i < 3) && (0 < 3 || i >= 3);
+i += (0<3) ? 1 : -1)
 		buff[end+i] = ext[i];
 
 	buff[strlen(buff)] = closing;
@@ -67,7 +71,9 @@ void create_headers( char name[BUFF_LEN])
 {
 	 int end =  strlen(name);
 
-	for (int i = end-3; i < end; i++)
+	for (int i = (end-3<end) ? end-3 : end-3-1;
+(end-3 >= end || i < end) && (end-3 < end || i >= end);
+i += (end-3<end) ? 1 : -1)
 		name[i] = 0;
 
 	 FILE* in;
@@ -110,6 +116,13 @@ while ((c = getc(in)) != EOF) {
 			clear_buff(buff);
 			buff_index = 0;
 			fprintf(outh, "#define ");
+			parse_define(in, outh);
+		}
+
+		else if (strcmp(buff, "typedef") == 0 ){
+			clear_buff(buff);
+			buff_index = 0;
+			fprintf(outh, "typedef ");
 			parse_define(in, outh);
 		}
 

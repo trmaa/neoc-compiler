@@ -190,7 +190,9 @@ while ((c = getc(in)) != EOF && c != '\n') // printf doesn't seem to work in thi
 
 	 int len =  i;
 
-	for (int i = 0; i < len; i++)
+	for (int i = (0<len) ? 0 : 0-1;
+(0 >= len || i < len) && (0 < len || i >= len);
+i += (0<len) ? 1 : -1)
 		if (whole_func[i] == '~')
 			strcpy(type, &whole_func[i+1]);
 			//sprintf(type, "%s", &whole_func[i+1]);
@@ -330,7 +332,49 @@ while ((c = getc(in)) != EOF && c != '{' && c != '\n') {
 
 	sscanf(buff, "let %s in %[^.]..%s", name, min, max);
 
-	fprintf(out, "int %s = %s; %s < %s; %s++", name, min, name, max, name);
+	/*
+	 * if (min < Max:)
+	 * 	for (int  = (<) ?  : -1;
+( >=  ||  < ) && ( <  ||  >= );
+ += (<) ? 1 : -1)
+	 * else:
+	 * 	for (int  = (<) ?  : -1;
+( >=  ||  < ) && ( <  ||  >= );
+ += (<) ? 1 : -1)
+	 */
+
+	//First for statement
+	fprintf(out, "int %s = (%s<%s) ? %s : %s-1;\n", name, min, max, min, min);
+
+	//Condition
+	/*
+	 * We want this
+	 *
+	 * 	if (min < Max:)
+	 * 		i < Max
+	 * 	else
+	 * 		i >= Max
+	 *
+	 * Lets write it just with ANDs and ORs as a condition!
+	 * 
+	 * 		    (m < M <--> i < M)
+	 *
+	 * 		Simplify to regular arrows.
+	 *
+	 * 	   (m < M --> i < M) ^ (m >= M --> i >= M)
+	 *
+	 * 		Transleting arrows to ORs.
+	 *
+	 *	    (m >= M v i < M) ^ (m < M v i >= M)
+	 *
+	 * This is the condition that we must check to get that result.
+	 * You can test that when m < M, i >= M cancels out, and biceversa.
+	 */
+	fprintf(out, "(%s >= %s || %s < %s) && (%s < %s || %s >= %s);\n",
+			min, max, name, max, min, max, name, max);
+
+	//Increment
+	fprintf(out, "%s += (%s<%s) ? 1 : -1", name, min, max);
 
 	putc(')', out);
 	putc(c, out);
@@ -341,7 +385,9 @@ void parse( char name[BUFF_LEN])
 	 int end =  strlen(name);
 	 char ext =  name[end-1];
 
-	for (int i = end-3; i < end; i++)
+	for (int i = (end-3<end) ? end-3 : end-3-1;
+(end-3 >= end || i < end) && (end-3 < end || i >= end);
+i += (end-3<end) ? 1 : -1)
 		name[i] = 0;
 
 	 FILE* in;
