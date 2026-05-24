@@ -19,6 +19,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 #include "buff.h"
 static void parse_use( FILE* in,  FILE*  out)
 {	 char c;

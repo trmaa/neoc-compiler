@@ -17,6 +17,7 @@
 
 use <stdio>
 use <string>
+use <stdbool>
 use "buff"
 
 fn parse_use(in: FILE*, out: FILE*) ~static void {
