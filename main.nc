@@ -77,7 +77,7 @@ start {
 	char path[BUFF_LEN] = "";
 
 	if ((dir = opendir("obj")) == NULL) {
-		printf("WTF\n");
+		printf("use bash, please\n");
 		exit(1);
 	}
 
