@@ -35,7 +35,13 @@
 #include "parser.h"
 #include "header.h"
 void help( )
-{	fprintf(stderr, "\e[32mUSE ALWAYS: ncc 0.nc 1.nc ... -o out\e[0m\n");
+{	fprintf(stderr, "\e[32mUSE:\e[0m\n");
+	fprintf(stderr, "\e[32m\tncc [-option]... [src]\e[0m\n");
+	fprintf(stderr, "\e[32mOPTIONS:\e[0m\n");
+	fprintf(stderr, "\e[32m\t-o set the out binary name\e[0m\n");
+	fprintf(stderr, "\e[32m\t-c do not remove the files produced by the compiler after compiling\e[0m\n");
+	fprintf(stderr, "\e[32m\t-f give a string of gcc flags, like '-lm -lX11'\e[0m\n");
+	fprintf(stderr, "\e[32m\t-h help\e[0m\n");
 }
 
 int main(int argc, char *argv[])
@@ -47,7 +53,8 @@ system("mkdir -p obj");
 	system("rm obj/*");
 	char out[BUFF_LEN] = "a.out";
 char flags[BUFF_LEN*4] = "";
-for (int i = (1<argc) ? 1 : 1-1;
+//make all .nc into obj/.nc and .nh
+	for (int i = (1<argc) ? 1 : 1-1;
 (1 >= argc || i < argc) && (1 < argc || i >= argc);
 i += (1<argc) ? 1 : -1){
 		if (strcmp(argv[i], "-o") == 0 ){
@@ -73,15 +80,11 @@ i += (1<argc) ? 1 : -1){
 		create_headers(argv[i]); //pre processes nc code to make nh code into obj/
 	}
 
-	DIR *dir;
+	 DIR* dir =  opendir("obj");
 	struct dirent *entry;
 	char path[BUFF_LEN] = "";
 
-	if ((dir = opendir("obj")) == NULL) {
-		printf("WTF\n");
-		exit(1);
-	}
-
+	//compile the obj/*.nc into obj/.c
 	while ((entry = readdir(dir)) != NULL) {
 		if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
 			continue;
@@ -94,6 +97,7 @@ i += (1<argc) ? 1 : -1){
 
 	closedir(dir);
 	
+	//compile with gcc
 	char cmd[BUFF_LEN*4] = "";
 sprintf(cmd, "gcc obj/*.c -o %s %s", out, flags);
 	system(cmd);

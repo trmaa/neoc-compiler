@@ -36,7 +36,13 @@ use "parser"
 use "header"
 
 fn help() ~void {
-	fprintf(stderr, "\e[32mUSE ALWAYS: ncc 0.nc 1.nc ... -o out\e[0m\n");
+	fprintf(stderr, "\e[32mUSE:\e[0m\n");
+	fprintf(stderr, "\e[32m\tncc [-option]... [src]\e[0m\n");
+	fprintf(stderr, "\e[32mOPTIONS:\e[0m\n");
+	fprintf(stderr, "\e[32m\t-o set the out binary name\e[0m\n");
+	fprintf(stderr, "\e[32m\t-c do not remove the files produced by the compiler after compiling\e[0m\n");
+	fprintf(stderr, "\e[32m\t-f give a string of gcc flags, like '-lm -lX11'\e[0m\n");
+	fprintf(stderr, "\e[32m\t-h help\e[0m\n");
 }
 
 start {
@@ -48,6 +54,7 @@ start {
 	let out[BUFF_LEN] = "a.out";
 	let flags[BUFF_LEN*4] = "";
 
+	// make all .nc into obj/.nc and .nh
 	for let i in 1..argc {
 		if strcmp(argv[i], "-o") == 0 {
 			strcpy(out, argv[++i]);
@@ -72,15 +79,11 @@ start {
 		create_headers(argv[i]); // pre processes nc code to make nh code into obj/
 	}
 
-	DIR *dir;
+	let dir: DIR* = opendir("obj");
 	struct dirent *entry;
 	char path[BUFF_LEN] = "";
 
-	if ((dir = opendir("obj")) == NULL) {
-		printf("use bash, please\n");
-		exit(1);
-	}
-
+	// compile the obj/*.nc into obj/.c
 	while ((entry = readdir(dir)) != NULL) {
 		if strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0
 			continue;
@@ -93,6 +96,7 @@ start {
 
 	closedir(dir);
 	
+	// compile with gcc
 	let cmd[BUFF_LEN*4] = "";
 	sprintf(cmd, "gcc obj/*.c -o %s %s", out, flags);
 	system(cmd);
