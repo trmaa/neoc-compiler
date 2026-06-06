@@ -35,6 +35,8 @@ use "buff"
 use "parser"
 use "header"
 
+def VERSION "Alpha 1.1"
+
 fn help() ~void {
 	fprintf(stderr, "\e[32mUSE:\e[0m\n");
 	fprintf(stderr, "\e[32m\tncc [-option]... [src]\e[0m\n");
@@ -43,14 +45,13 @@ fn help() ~void {
 	fprintf(stderr, "\e[32m\t-c do not remove the files produced by the compiler after compiling\e[0m\n");
 	fprintf(stderr, "\e[32m\t-f give a string of gcc flags, like '-lm -lX11'\e[0m\n");
 	fprintf(stderr, "\e[32m\t-h help\e[0m\n");
+	fprintf(stderr, "\e[32m\t-v version\e[0m\n");
 }
 
 start {
-	let begin: clock_t = clock();
-	
+	let begin: clock_t = clock();	
+
 	let clean = true;
-	system("mkdir -p obj");
-	system("rm obj/*");
 	let out[BUFF_LEN] = "a.out";
 	let flags[BUFF_LEN*4] = "";
 
@@ -71,6 +72,11 @@ start {
 			exit(0); // TODO: clean obj/
 		}
 
+		if strcmp(argv[i], "-v") == 0 {
+			printf("Neo C Compiler (NCC): %s\n", VERSION);
+			exit(0); // TODO: clean obj/
+		}
+
 		if strcmp(argv[i], "-f") == 0 {
 			strcpy(flags, argv[++i]);
 			continue;
@@ -79,6 +85,9 @@ start {
 		create_headers(argv[i]); // pre processes nc code to make nh code into obj/
 	}
 
+	system("mkdir -p obj");
+	system("rm obj/*");
+	
 	let dir: DIR* = opendir("obj");
 	struct dirent *entry;
 	char path[BUFF_LEN] = "";

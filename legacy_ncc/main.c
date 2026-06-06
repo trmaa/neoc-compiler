@@ -34,6 +34,9 @@
 #include "buff.h"
 #include "parser.h"
 #include "header.h"
+
+#define VERSION "Alpha 1.1"
+
 void help( )
 {	fprintf(stderr, "\e[32mUSE:\e[0m\n");
 	fprintf(stderr, "\e[32m\tncc [-option]... [src]\e[0m\n");
@@ -42,17 +45,17 @@ void help( )
 	fprintf(stderr, "\e[32m\t-c do not remove the files produced by the compiler after compiling\e[0m\n");
 	fprintf(stderr, "\e[32m\t-f give a string of gcc flags, like '-lm -lX11'\e[0m\n");
 	fprintf(stderr, "\e[32m\t-h help\e[0m\n");
+	fprintf(stderr, "\e[32m\t-v version\e[0m\n");
 }
 
 int main(int argc, char *argv[])
 {
 	 clock_t begin =  clock();
-	
-	bool clean = true;
-system("mkdir -p obj");
-	system("rm obj/*");
-	char out[BUFF_LEN] = "a.out";
-char flags[BUFF_LEN*4] = "";
+
+	 bool clean = true;
+	 char out[BUFF_LEN] = "a.out";
+	 char flags[BUFF_LEN*4] = "";
+
 //make all .nc into obj/.nc and .nh
 	for (int i = (1<argc) ? 1 : 1-1;
 (1 >= argc || i < argc) && (1 < argc || i >= argc);
@@ -72,6 +75,11 @@ i += (1<argc) ? 1 : -1){
 			exit(0); //TODO: clean obj/
 		}
 
+		if (strcmp(argv[i], "-v") == 0 ){
+			printf("Neo C Compiler (NCC): %s\n", VERSION);
+			exit(0); //TODO: clean obj/
+		}
+
 		if (strcmp(argv[i], "-f") == 0 ){
 			strcpy(flags, argv[++i]);
 			continue;
@@ -79,8 +87,11 @@ i += (1<argc) ? 1 : -1){
 
 		create_headers(argv[i]); //pre processes nc code to make nh code into obj/
 	}
-
-	 DIR* dir =  opendir("obj");
+	
+system("mkdir -p obj");
+	system("rm obj/*");
+	
+	DIR* dir =  opendir("obj");
 	struct dirent *entry;
 	char path[BUFF_LEN] = "";
 
