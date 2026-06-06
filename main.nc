@@ -34,6 +34,7 @@ use <dirent>
 use "buff"
 use "parser"
 use "header"
+use "main"
 
 def VERSION "Alpha 1.1"
 
@@ -54,6 +55,9 @@ start {
 	let clean = true;
 	let out[BUFF_LEN] = "a.out";
 	let flags[BUFF_LEN*4] = "";
+
+	system("mkdir -p obj");
+	system("rm obj/*");
 
 	// make all .nc into obj/.nc and .nh
 	for let i in 1..argc {
@@ -84,9 +88,6 @@ start {
 
 		create_headers(argv[i]); // pre processes nc code to make nh code into obj/
 	}
-
-	system("mkdir -p obj");
-	system("rm obj/*");
 	
 	let dir: DIR* = opendir("obj");
 	struct dirent *entry;

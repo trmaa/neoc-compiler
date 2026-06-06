@@ -56,6 +56,9 @@ int main(int argc, char *argv[])
 	 char out[BUFF_LEN] = "a.out";
 	 char flags[BUFF_LEN*4] = "";
 
+	 system("mkdir -p obj");
+	 system("rm obj/*");
+
 //make all .nc into obj/.nc and .nh
 	for (int i = (1<argc) ? 1 : 1-1;
 (1 >= argc || i < argc) && (1 < argc || i >= argc);
@@ -87,9 +90,6 @@ i += (1<argc) ? 1 : -1){
 
 		create_headers(argv[i]); //pre processes nc code to make nh code into obj/
 	}
-	
-system("mkdir -p obj");
-	system("rm obj/*");
 	
 	DIR* dir =  opendir("obj");
 	struct dirent *entry;
